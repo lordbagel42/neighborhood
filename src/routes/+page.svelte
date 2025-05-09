@@ -1,9 +1,11 @@
-<script lang="ts">
+<script>
 	let { data } = $props();
+	let { colors } = $derived(data);
 </script>
 
+<h1>Welcome to Supabase!</h1>
 <ul>
-	{#each data.instruments as instrument}
-		<li>{instrument.name}</li>
+	{#each colors as color}
+		<li>{color.name}</li>
 	{/each}
 </ul>
