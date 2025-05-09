@@ -8,7 +8,7 @@
 	let showMouseTracker = $state(false);
 
 	const CURSOR_OFFSET_X = 1;
-	const CURSOR_OFFSET_Y = 111;
+	const CURSOR_OFFSET_Y = 120;
 </script>
 
 <input
