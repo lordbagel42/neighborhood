@@ -50,7 +50,9 @@
 	<div class="bg-base-300 w-full max-w-md rounded-2xl p-8 shadow-2xl">
 		<h2 class="my-4 text-center text-2xl font-semibold">{isSignup ? 'Sign Up' : 'Login'}</h2>
 		<div class="my-4 flex flex-col items-center justify-center gap-4">
-			<p class="text-base-content text-sm opacity-70">OAuth login is currently nonfunctional.</p>
+			<p class="text-base-content text-sm opacity-70">
+				OAuth {isSignup ? 'signup' : 'login'} is currently disabled.
+			</p>
 			<div class="flex items-center justify-center gap-4">
 				{#each oidcProviders as provider}
 					<button
