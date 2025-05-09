@@ -28,13 +28,13 @@
 		{
 			name: 'Profile',
 			badge: '',
-			link: '/user/profile',
+			link: '/private',
 			type: 'link'
 		},
 		{
 			name: 'Settings',
 			badge: '',
-			link: '/user/settings',
+			link: '/private/settings',
 			type: 'link'
 		},
 		{

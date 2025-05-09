@@ -30,8 +30,7 @@
 
 	const signupFields = [
 		...loginFields,
-		{ name: 'firstName', placeholder: 'First Name', required: true, type: 'text', icon: User },
-		{ name: 'lastName', placeholder: 'Last Name', required: true, type: 'text', icon: User }
+		{ name: 'displayName', placeholder: 'Display Name', required: true, type: 'text', icon: User }
 	];
 
 	const oidcProviders = [
@@ -50,16 +49,19 @@
 <div class="flex min-h-screen items-center justify-center">
 	<div class="bg-base-300 w-full max-w-md rounded-2xl p-8 shadow-2xl">
 		<h2 class="my-4 text-center text-2xl font-semibold">{isSignup ? 'Sign Up' : 'Login'}</h2>
-		<div class="my-4 flex items-center justify-center gap-4">
-			{#each oidcProviders as provider}
-				<button
-					type="button"
-					class="btn btn-outline btn-primary text-base-content rounded-full p-3 transition hover:brightness-110"
-					onclick={provider.onClick}
-				>
-					<provider.icon class="h-6 w-6" />
-				</button>
-			{/each}
+		<div class="my-4 flex flex-col items-center justify-center gap-4">
+			<p class="text-base-content text-sm opacity-70">OAuth login is currently nonfunctional.</p>
+			<div class="flex items-center justify-center gap-4">
+				{#each oidcProviders as provider}
+					<button
+						type="button"
+						class="btn btn-outline btn-primary text-base-content rounded-full p-3 transition hover:brightness-110"
+						disabled
+					>
+						<provider.icon class="h-6 w-6 opacity-50" />
+					</button>
+				{/each}
+			</div>
 		</div>
 		<form method="POST" action={`?/${isSignup ? 'signup' : 'login'}`} class="space-y-4">
 			{#each fields as field}
