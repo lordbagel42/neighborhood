@@ -1,21 +1,26 @@
 <script lang="ts">
 	import { AppName } from '$lib/utils/constants';
-	import type { Session } from '@supabase/supabase-js';
-	import { supabase } from '$lib/database/supabaseClient';
+	import type { Session, SupabaseClient } from '@supabase/supabase-js';
+	import { onMount } from 'svelte';
+	import { User } from '@lucide/svelte';
 
 	interface Props {
 		session: Session | null;
+		supabase: SupabaseClient;
 	}
 
-	const { session }: Props = $props();
+	const { session, supabase }: Props = $props();
 
 	const signedIn = session?.user !== undefined;
 
 	const logout = async () => {
-		const { error } = await supabase.auth.signOut();
 		console.log('Logging out...');
+		const { error } = await supabase.auth.signOut();
 		if (error) {
 			console.error(error);
+		} else {
+			console.log('Logged out successfully');
+			location.reload();
 		}
 	};
 
@@ -24,21 +29,26 @@
 			name: 'Profile',
 			badge: '',
 			link: '/user/profile',
-			onclick: undefined
+			type: 'link'
 		},
 		{
 			name: 'Settings',
 			badge: '',
 			link: '/user/settings',
-			onclick: undefined
+			type: 'link'
 		},
 		{
 			name: signedIn ? 'Logout' : 'Login',
 			badge: '',
-			link: undefined,
+			type: signedIn ? 'button' : 'link',
+			link: signedIn ? undefined : '/auth',
 			onclick: signedIn ? () => logout() : undefined
 		}
 	];
+
+	onMount(() => {
+		console.log(signedIn);
+	});
 </script>
 
 <div class="navbar bg-base-100 shadow-sm">
@@ -52,10 +62,7 @@
 				<div class="w-10 rounded-full">
 					{#if !signedIn}
 						<!-- black magic svg thing -->
-						<img
-							alt="User Avatar"
-							src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS11c2VyLWljb24gbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0xOSAyMXYtMmE0IDQgMCAwIDAtNC00SDlhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+"
-						/>
+						<User class="h-full w-full" />
 					{:else}
 						<img
 							alt="User Avatar"
@@ -67,12 +74,21 @@
 			<ul class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
 				{#each userDropdown as user}
 					<li>
-						<a href={user.link} class="flex items-center gap-2" onclick={user.onclick}>
-							{user.name}
-							{#if user.badge}
-								<span class="badge badge-xs">{user.badge}</span>
-							{/if}
-						</a>
+						{#if user.type === 'button'}
+							<button on:click={user.onclick} class="flex w-full items-center gap-2 text-left">
+								{user.name}
+								{#if user.badge}
+									<span class="badge badge-xs">{user.badge}</span>
+								{/if}
+							</button>
+						{:else}
+							<a href={user.link} class="flex items-center gap-2">
+								{user.name}
+								{#if user.badge}
+									<span class="badge badge-xs">{user.badge}</span>
+								{/if}
+							</a>
+						{/if}
 					</li>
 				{/each}
 			</ul>

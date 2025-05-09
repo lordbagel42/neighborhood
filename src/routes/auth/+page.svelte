@@ -1,43 +1,97 @@
-<div class="flex justify-center">
-	<div class="card bg-base-100 mt-20 mb-20 w-96 shadow-xl">
-		<div class="card-body">
-			<h2 class="card-title">Login!</h2>
-			<form method="POST" action="?/login" class="mt-2">
-				<label class="input input-bordered mb-2 flex items-center gap-2">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 16 16"
-						fill="currentColor"
-						class="h-4 w-4 opacity-70"
-					>
-						<path
-							d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z"
-						/>
-						<path
-							d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z"
-						/>
-					</svg>
-					<input name="email" type="email" class="grow" placeholder="Email" />
-				</label>
-				<label class="input input-bordered mb-2 flex items-center gap-2">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 16 16"
-						fill="currentColor"
-						class="h-4 w-4 opacity-70"
-					>
-						<path
-							fill-rule="evenodd"
-							d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-							clip-rule="evenodd"
-						/>
-					</svg>
-					<input name="password" type="password" class="grow" placeholder="Password" />
-				</label>
-				<div class="card-actions justify-end">
-					<button type="submit" class="btn btn-primary w-full">Login</button>
-				</div>
-			</form>
+<script lang="ts">
+	import { User, Mail, Lock, Slack, Github } from '@lucide/svelte';
+
+	let { supabase } = $props();
+
+	let isSignup = $state(false);
+
+	async function signInWithSlack() {
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider: 'slack_oidc'
+		});
+	}
+
+	const loginFields = [
+		{
+			name: 'email',
+			placeholder: 'Email',
+			required: true,
+			type: 'email',
+			icon: Mail
+		},
+		{
+			name: 'password',
+			placeholder: 'Password',
+			required: true,
+			type: 'password',
+			icon: Lock
+		}
+	];
+
+	const signupFields = [
+		...loginFields,
+		{ name: 'firstName', placeholder: 'First Name', required: true, type: 'text', icon: User },
+		{ name: 'lastName', placeholder: 'Last Name', required: true, type: 'text', icon: User }
+	];
+
+	const oidcProviders = [
+		{ icon: Slack, onClick: signInWithSlack },
+		{
+			icon: Github,
+			onClick: () => {
+				console.log('GitHub login clicked');
+			}
+		}
+	];
+
+	let fields = $derived(isSignup ? signupFields : loginFields);
+</script>
+
+<div class="flex min-h-screen items-center justify-center">
+	<div class="bg-base-300 w-full max-w-md rounded-2xl p-8 shadow-2xl">
+		<h2 class="my-4 text-center text-2xl font-semibold">{isSignup ? 'Sign Up' : 'Login'}</h2>
+		<div class="my-4 flex items-center justify-center gap-4">
+			{#each oidcProviders as provider}
+				<button
+					type="button"
+					class="btn btn-outline btn-primary text-base-content rounded-full p-3 transition hover:brightness-110"
+					onclick={provider.onClick}
+				>
+					<provider.icon class="h-6 w-6" />
+				</button>
+			{/each}
 		</div>
+		<form method="POST" action={`?/${isSignup ? 'signup' : 'login'}`} class="space-y-4">
+			{#each fields as field}
+				<div class="relative">
+					{#if field.icon}
+						<field.icon
+							class="text-base-content absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 opacity-70"
+						/>
+					{/if}
+					<input
+						name={field.name}
+						type={field.type}
+						class="bg-base-200 focus:ring-primary w-full rounded-xl py-2 pr-4 pl-10 transition focus:ring-2 focus:outline-none"
+						placeholder={field.placeholder}
+						required={field.required ?? false}
+					/>
+				</div>
+			{/each}
+
+			<button
+				type="submit"
+				class="bg-primary w-full rounded-xl py-2 font-semibold text-white transition hover:brightness-110"
+			>
+				{isSignup ? 'Create Account' : 'Login'}
+			</button>
+			<button
+				type="button"
+				class="text-primary my-2 w-full text-sm hover:underline"
+				onclick={() => (isSignup = !isSignup)}
+			>
+				{isSignup ? 'Already have an account? Log in' : 'No account? Sign up'}
+			</button>
+		</form>
 	</div>
 </div>

@@ -17,6 +17,6 @@
 	});
 </script>
 
-<Navbar {session} />
+<Navbar {session} {supabase} />
 
 {@render children()}
