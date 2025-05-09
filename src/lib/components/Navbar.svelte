@@ -2,7 +2,7 @@
 	import { AppName } from '$lib/utils/constants';
 	import type { Session, SupabaseClient } from '@supabase/supabase-js';
 	import { onMount } from 'svelte';
-	import { User } from '@lucide/svelte';
+	import { Sun, Moon, User } from '@lucide/svelte';
 
 	interface Props {
 		session: Session | null;
@@ -46,12 +46,40 @@
 		}
 	];
 
+	let mode = $state<'dracula' | 'emerald'>('emerald');
+
+	const applyTheme = (theme: string) => {
+		document.documentElement.setAttribute('data-theme', theme);
+		localStorage.setItem('theme', theme);
+	};
+
+	onMount(() => {
+		const stored = localStorage.getItem('theme') as 'emerald' | 'dracula' | null;
+		if (stored) {
+			mode = stored;
+		}
+		applyTheme(mode);
+	});
+
+	const toggleTheme = () => {
+		mode = mode === 'dracula' ? 'emerald' : 'dracula';
+		applyTheme(mode);
+	};
 	onMount(() => {
 		console.log(signedIn);
 	});
 </script>
 
 <div class="navbar bg-base-100 shadow-sm">
+	<div class="flex-1">
+		<button class="btn btn-ghost btn-circle" onclick={toggleTheme} aria-label="Toggle Theme">
+			{#if mode === 'dracula'}
+				<Moon class="h-[1.2rem] w-[1.2rem]" />
+			{:else}
+				<Sun class="h-[1.2rem] w-[1.2rem]" />
+			{/if}
+		</button>
+	</div>
 	<div class="flex-1">
 		<a href="/" class="btn btn-ghost text-xl">{AppName}</a>
 	</div>
@@ -75,7 +103,7 @@
 				{#each userDropdown as user}
 					<li>
 						{#if user.type === 'button'}
-							<button on:click={user.onclick} class="flex w-full items-center gap-2 text-left">
+							<button onclick={user.onclick} class="flex w-full items-center gap-2 text-left">
 								{user.name}
 								{#if user.badge}
 									<span class="badge badge-xs">{user.badge}</span>
