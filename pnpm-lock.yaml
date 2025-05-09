@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@lucide/svelte':
+        specifier: ^0.508.0
+        version: 0.508.0(svelte@5.28.2)
       '@supabase/ssr':
         specifier: ^0.6.1
         version: 0.6.1(@supabase/supabase-js@2.49.4)
@@ -490,6 +493,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@lucide/svelte@0.508.0':
+    resolution: {integrity: sha512-yJZz7QMP4VvtyHlnjSIvM+DGyeCoZJlWMJJDm9K7op4Vf41Q5kguq25uXH8t9I5y0xT2aWpRlxbpvK9L0K1uRA==}
+    peerDependencies:
+      svelte: ^5
 
   '@modelcontextprotocol/sdk@1.11.1':
     resolution: {integrity: sha512-9LfmxKTb1v+vUS1/emSk1f5ePmTLkb9Le9AxOB5T0XM59EUumwcS45z05h7aiZx3GI0Bl7mjb3FMEglYj+acuQ==}
@@ -2319,6 +2327,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@lucide/svelte@0.508.0(svelte@5.28.2)':
+    dependencies:
+      svelte: 5.28.2
 
   '@modelcontextprotocol/sdk@1.11.1':
     dependencies:

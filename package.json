@@ -45,6 +45,7 @@
 		]
 	},
 	"dependencies": {
+		"@lucide/svelte": "^0.508.0",
 		"@supabase/ssr": "^0.6.1",
 		"@supabase/supabase-js": "^2.49.4",
 		"daisyui": "^5.0.35"

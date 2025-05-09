@@ -2,5 +2,10 @@
 	"files.associations": {
 		"wrangler.json": "jsonc"
 	},
-	"editor.formatOnSave": true
+	"editor.formatOnSave": true,
+	"github.copilot.chat.codeGeneration.instructions": [
+		{
+			"file": "./.vscode/daisyui.md"
+		}
+	]
 }
