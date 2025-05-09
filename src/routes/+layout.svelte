@@ -17,6 +17,6 @@
 	});
 </script>
 
-<Navbar />
+<Navbar {session} />
 
 {@render children()}
