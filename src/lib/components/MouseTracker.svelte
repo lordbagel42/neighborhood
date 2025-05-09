@@ -106,6 +106,9 @@
 			clearInterval(cleanupInterval);
 		};
 	});
+
+	// Reactive statement to calculate the number of connected clients
+	$: clientCount = mousePositions.length;
 </script>
 
 <!-- 👤 Your own cursor -->
@@ -131,6 +134,11 @@
 	</div>
 {/each}
 
+<!-- Display the client count -->
+<div class="client-count text-primary font-bold">
+	Connected Clients: {clientCount}
+</div>
+
 <style>
 	.client-box {
 		position: absolute;
@@ -141,5 +149,14 @@
 	.my-cursor {
 		filter: drop-shadow(0 0 2px white);
 		opacity: 0.95;
+	}
+	.client-count {
+		position: fixed;
+		top: 10px;
+		right: 10px;
+		background: rgba(255, 255, 255, 0.8);
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 </style>
