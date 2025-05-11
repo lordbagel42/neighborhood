@@ -51,6 +51,8 @@
 		"daisyui": "^5.0.35",
 		"install": "^0.13.0",
 		"mode-watcher": "^1.0.7",
+		"seedrandom": "^3.0.5",
+		"svelte-portal": "^2.2.1",
 		"theme-change": "^2.5.0"
 	}
 }

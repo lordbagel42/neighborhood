@@ -1,53 +1,83 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { supabase } from '../lib/database/supabaseClient';
-	import { MousePointer2 } from '@lucide/svelte';
 	import MouseTracker from '../lib/components/MouseTracker.svelte';
+	import Canvas from '$lib/components/game/Canvas.svelte';
 
 	let clientId = $state('');
 	let showMouseTracker = $state(false);
 	let clientCount = $state(0);
 
-	const CURSOR_OFFSET_X = 1;
-	const CURSOR_OFFSET_Y = 120;
+	const { data } = $props();
+	let key = $state('');
 
-	onMount(() => {
-		const channel = supabase.channel('mouse-positions');
+	const supabase = $derived(data.supabase);
+	let signedIn = $state(false);
 
-		channel.on('broadcast', { event: 'client-count' }, (payload) => {
-			clientCount = payload.payload.count;
-		});
+	const getColorFromClientId = (client_id: string) => {
+		let hash = 0;
+		for (let i = 0; i < client_id.length; i++) {
+			hash = client_id.charCodeAt(i) + ((hash << 5) - hash);
+		}
+		const hue = Math.abs(hash) % 360;
+		return `hsl(${hue}, 80%, 60%)`;
+	};
+	const myColor = $derived.by(() => getColorFromClientId(clientId || crypto.randomUUID()));
 
-		channel.subscribe();
-
-		return () => {
-			channel.unsubscribe();
-		};
+	supabase.auth.getUser().then(({ data }) => {
+		if (data.user) {
+			signedIn = true;
+			showMouseTracker = true;
+			clientId = data.user.user_metadata.display_name || data.user.id;
+		} else {
+			signedIn = false;
+			showMouseTracker = false;
+			clientId = '';
+		}
 	});
+
+	const CURSOR_OFFSET_X = 3;
+	const CURSOR_OFFSET_Y = -45;
 </script>
 
-<input
-	type="text"
-	placeholder="Enter your name"
-	bind:value={clientId}
-	class="input input-bordered mx-2 my-2"
+{#if !signedIn}
+	<div class="m-4 flex flex-col items-center justify-center gap-2">
+		<input
+			type="text"
+			placeholder="Enter your name"
+			bind:value={clientId}
+			class="input input-bordered w-64"
+		/>
+		<button
+			class="btn btn-primary w-64"
+			on:click={() => {
+				if (clientId.trim()) {
+					showMouseTracker = true;
+				}
+			}}
+		>
+			Start Tracking
+		</button>
+	</div>
+{/if}
+
+<MouseTracker
+	{clientId}
+	{CURSOR_OFFSET_X}
+	{CURSOR_OFFSET_Y}
+	{supabase}
+	{showMouseTracker}
+	{myColor}
 />
-<button
-	class="btn btn-primary mx-2 my-2"
-	onclick={() => {
-		if (clientId.trim()) {
-			showMouseTracker = true;
-		}
-	}}
->
-	Start Tracking
-</button>
 
-<MouseTracker {clientId} {CURSOR_OFFSET_X} {CURSOR_OFFSET_Y} {supabase} {showMouseTracker} />
-
-<!-- Display the client count -->
-<div class="client-count text-primary font-bold">
-	Connected Clients: {clientCount}
+<div class="mt-4 flex h-[calc(100vh-8rem)] items-center justify-center">
+	<div class="aspect-square w-full max-w-[calc(100vh-8rem)] p-4">
+		<input
+			type="text"
+			placeholder="Enter a key"
+			bind:value={key}
+			class="input input-bordered mb-4 w-full"
+		/>
+		<Canvas {myColor} {key} />
+	</div>
 </div>
 
 <style>

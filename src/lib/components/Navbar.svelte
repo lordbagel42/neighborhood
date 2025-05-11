@@ -3,6 +3,7 @@
 	import type { Session, SupabaseClient } from '@supabase/supabase-js';
 	import { onMount } from 'svelte';
 	import { Sun, Moon, User } from '@lucide/svelte';
+	import type { User as UserType } from '@supabase/supabase-js';
 
 	interface Props {
 		session: Session | null;
@@ -11,7 +12,18 @@
 
 	const { session, supabase }: Props = $props();
 
-	const signedIn = session?.user !== undefined;
+	let signedIn = $state(false);
+	let user: UserType | null = $state(null);
+
+	supabase.auth.getUser().then(({ data }) => {
+		if (data.user) {
+			signedIn = true;
+			user = data.user;
+		} else {
+			signedIn = false;
+			user = null;
+		}
+	});
 
 	const logout = async () => {
 		console.log('Logging out...');
@@ -38,11 +50,11 @@
 			type: 'link'
 		},
 		{
-			name: signedIn ? 'Logout' : 'Login',
+			name: () => (signedIn ? 'Logout' : 'Login'),
 			badge: '',
-			type: signedIn ? 'button' : 'link',
-			link: signedIn ? undefined : '/auth',
-			onclick: signedIn ? () => logout() : undefined
+			type: () => (signedIn ? 'button' : 'link'),
+			link: () => (signedIn ? undefined : '/auth'),
+			onclick: () => (signedIn ? logout() : undefined)
 		}
 	];
 
@@ -84,7 +96,11 @@
 		<a href="/" class="btn btn-ghost text-xl">{AppName}</a>
 	</div>
 	<div class="flex gap-2">
-		<input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+		{#if signedIn}
+			<h2 class="flex items-center">{user?.user_metadata?.display_name}</h2>
+		{:else}
+			<h2 class="flex items-center">Guest</h2>
+		{/if}
 		<div class="dropdown dropdown-end">
 			<div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
 				<div class="w-10 rounded-full">
@@ -100,20 +116,23 @@
 				</div>
 			</div>
 			<ul class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-				{#each userDropdown as user}
+				{#each userDropdown as item}
 					<li>
-						{#if user.type === 'button'}
-							<button onclick={user.onclick} class="flex w-full items-center gap-2 text-left">
-								{user.name}
-								{#if user.badge}
-									<span class="badge badge-xs">{user.badge}</span>
+						{#if (typeof item.type === 'function' ? item.type() : item.type) === 'button'}
+							<button onclick={item.onclick} class="flex w-full items-center gap-2 text-left">
+								{typeof item.name === 'function' ? item.name() : item.name}
+								{#if item.badge}
+									<span class="badge badge-xs">{item.badge}</span>
 								{/if}
 							</button>
 						{:else}
-							<a href={user.link} class="flex items-center gap-2">
-								{user.name}
-								{#if user.badge}
-									<span class="badge badge-xs">{user.badge}</span>
+							<a
+								href={typeof item.link === 'function' ? item.link() : item.link}
+								class="flex items-center gap-2"
+							>
+								{typeof item.name === 'function' ? item.name() : item.name}
+								{#if item.badge}
+									<span class="badge badge-xs">{item.badge}</span>
 								{/if}
 							</a>
 						{/if}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { MousePointer2 } from '@lucide/svelte';
+	import Portal from 'svelte-portal';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 
 	interface Props {
@@ -9,9 +10,11 @@
 		CURSOR_OFFSET_Y: number;
 		supabase: SupabaseClient;
 		showMouseTracker: boolean;
+		myColor: string;
 	}
 
-	let { clientId, CURSOR_OFFSET_X, CURSOR_OFFSET_Y, supabase, showMouseTracker } = $props();
+	let { clientId, CURSOR_OFFSET_X, CURSOR_OFFSET_Y, supabase, showMouseTracker, myColor } =
+		$props();
 
 	let mousePositions: {
 		client_id: string;
@@ -32,8 +35,6 @@
 		const hue = Math.abs(hash) % 360;
 		return `hsl(${hue}, 80%, 60%)`;
 	};
-
-	const myColor = getColorFromClientId(clientId);
 
 	onMount(() => {
 		const channel = supabase.channel('mouse-positions');
@@ -73,6 +74,7 @@
 		let lastSent = 0;
 
 		const handleMouseMove = (event: MouseEvent) => {
+			// console.log('Mouse Position:', event.clientX, event.clientY);
 			localX = event.clientX;
 			localY = event.clientY;
 
@@ -106,57 +108,50 @@
 			clearInterval(cleanupInterval);
 		};
 	});
-
-	// Reactive statement to calculate the number of connected clients
-	$: clientCount = mousePositions.length;
 </script>
 
-<!-- 👤 Your own cursor -->
-{#if showMouseTracker}
-	<div
-		class="client-box my-cursor"
-		style="transform: translate({localX - CURSOR_OFFSET_X}px, {localY -
-			CURSOR_OFFSET_Y}px); color: {myColor};"
-		title="You"
-	>
-		<MousePointer2 fill={myColor} />
-	</div>
-{/if}
+<Portal target="body">
+	{#if showMouseTracker}
+		<div
+			class="client-box my-cursor"
+			style="transform: translate3d({Math.round(localX - CURSOR_OFFSET_X)}px, {Math.round(
+				localY - CURSOR_OFFSET_Y - window.innerHeight
+			)}px, 0);"
+			title="You"
+		>
+			<MousePointer2 fill={myColor} />
+			<span class="font-xl rounded-5 rounded bg-white p-2 font-bold" style="color: {myColor}">
+				{clientId}
+			</span>
+		</div>
+	{/if}
 
-<!-- 🌍 Other users' cursors -->
-{#each mousePositions as { client_id, x, y, color } (client_id)}
-	<div
-		class="client-box"
-		style="transform: translate({x - CURSOR_OFFSET_X}px, {y - CURSOR_OFFSET_Y}px); color: {color};"
-		title={`Client: ${client_id}`}
-	>
-		<MousePointer2 fill={color} />
-	</div>
-{/each}
-
-<!-- Display the client count -->
-<div class="client-count text-primary font-bold">
-	Connected Clients: {clientCount}
-</div>
+	{#each mousePositions as { client_id, x, y, color } (client_id)}
+		<div
+			class="client-box"
+			style="transform: translate3d({Math.round(localX - CURSOR_OFFSET_X)}px, {Math.round(
+				localY - CURSOR_OFFSET_Y - window.innerHeight
+			)}px, 0);"
+			title={`Client: ${client_id}`}
+		>
+			<MousePointer2 fill={color} />
+			<span style="color: {color}; font-weight: bold; font-size: 0.8rem;">
+				{client_id}
+			</span>
+		</div>
+	{/each}
+</Portal>
 
 <style>
 	.client-box {
-		position: absolute;
+		position: absolute !important; /* Ensure it's rendered on top */
 		width: 24px;
 		height: 24px;
 		pointer-events: none;
+		will-change: transform;
 	}
 	.my-cursor {
 		filter: drop-shadow(0 0 2px white);
 		opacity: 0.95;
-	}
-	.client-count {
-		position: fixed;
-		top: 10px;
-		right: 10px;
-		background: rgba(255, 255, 255, 0.8);
-		padding: 0.5rem 1rem;
-		border-radius: 0.5rem;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 </style>

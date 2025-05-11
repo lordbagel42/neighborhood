@@ -26,6 +26,12 @@ importers:
       mode-watcher:
         specifier: ^1.0.7
         version: 1.0.7(svelte@5.28.2)
+      seedrandom:
+        specifier: ^3.0.5
+        version: 3.0.5
+      svelte-portal:
+        specifier: ^2.2.1
+        version: 2.2.1
       theme-change:
         specifier: ^2.5.0
         version: 2.5.0
@@ -1775,6 +1781,9 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
+  seedrandom@3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
+
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
     engines: {node: '>=10'}
@@ -1875,6 +1884,9 @@ packages:
     peerDependenciesMeta:
       svelte:
         optional: true
+
+  svelte-portal@2.2.1:
+    resolution: {integrity: sha512-uF7is5sM4aq5iN7QF/67XLnTUvQCf2iiG/B1BHTqLwYVY1dsVmTeXZ/LeEyU6dLjApOQdbEG9lkqHzxiQtOLEQ==}
 
   svelte-toolbelt@0.7.1:
     resolution: {integrity: sha512-HcBOcR17Vx9bjaOceUvxkY3nGmbBmCBBbuWLLEWO6jtmWH8f/QoWmbyUfQZrpDINH39en1b8mptfPQT9VKQ1xQ==}
@@ -3583,6 +3595,8 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
+  seedrandom@3.0.5: {}
+
   semver@7.7.1: {}
 
   send@1.2.0:
@@ -3731,6 +3745,8 @@ snapshots:
       postcss-selector-parser: 7.1.0
     optionalDependencies:
       svelte: 5.28.2
+
+  svelte-portal@2.2.1: {}
 
   svelte-toolbelt@0.7.1(svelte@5.28.2):
     dependencies:
