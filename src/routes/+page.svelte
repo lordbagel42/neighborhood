@@ -10,7 +10,8 @@
 	let key = $state('');
 
 	const supabase = $derived(data.supabase);
-	let signedIn = $state(false);
+	const user = $derived(data.user);
+	let signedIn = $derived.by(() => !!user);
 
 	const getColorFromClientId = (client_id: string) => {
 		let hash = 0;
@@ -21,18 +22,6 @@
 		return `hsl(${hue}, 80%, 60%)`;
 	};
 	const myColor = $derived.by(() => getColorFromClientId(clientId || crypto.randomUUID()));
-
-	supabase.auth.getUser().then(({ data }) => {
-		if (data.user) {
-			signedIn = true;
-			showMouseTracker = true;
-			clientId = data.user.user_metadata.display_name || data.user.id;
-		} else {
-			signedIn = false;
-			showMouseTracker = false;
-			clientId = '';
-		}
-	});
 
 	const CURSOR_OFFSET_X = 3;
 	const CURSOR_OFFSET_Y = -45;
@@ -48,7 +37,7 @@
 		/>
 		<button
 			class="btn btn-primary w-64"
-			on:click={() => {
+			onclick={() => {
 				if (clientId.trim()) {
 					showMouseTracker = true;
 				}

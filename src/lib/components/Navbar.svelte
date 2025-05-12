@@ -8,22 +8,12 @@
 	interface Props {
 		session: Session | null;
 		supabase: SupabaseClient;
+		user: UserType | null;
 	}
 
-	const { session, supabase }: Props = $props();
+	const { session, supabase, user }: Props = $props();
 
-	let signedIn = $state(false);
-	let user: UserType | null = $state(null);
-
-	supabase.auth.getUser().then(({ data }) => {
-		if (data.user) {
-			signedIn = true;
-			user = data.user;
-		} else {
-			signedIn = false;
-			user = null;
-		}
-	});
+	let signedIn = $derived.by(() => !!user);
 
 	const logout = async () => {
 		console.log('Logging out...');

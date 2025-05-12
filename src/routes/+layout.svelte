@@ -6,7 +6,7 @@
 	import { themeChange } from 'theme-change';
 
 	let { data, children } = $props();
-	let { session, supabase } = $derived(data);
+	let { session, supabase, user } = $derived(data);
 
 	onMount(() => {
 		// themeChange(false);
@@ -20,6 +20,6 @@
 	});
 </script>
 
-<Navbar {session} {supabase} />
+<Navbar {session} {supabase} {user} />
 
 {@render children()}
