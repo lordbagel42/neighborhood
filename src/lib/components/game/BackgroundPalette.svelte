@@ -1,22 +1,22 @@
 <script lang="ts">
 	interface Props {
-		drawColor: string;
+		backgroundColor: string;
 	}
 
-	let { drawColor = $bindable() }: Props = $props();
+	let { backgroundColor = $bindable() }: Props = $props();
 
 	const setColor = (color: string) => {
-		drawColor = color;
-		console.log('Selected color:', drawColor);
+		backgroundColor = color;
+		console.log('Selected color:', backgroundColor);
 	};
 </script>
 
 <div class="card bg-base-100 h-full w-full border-2 border-black shadow">
 	<div class="card-body">
-		<h2 class="card-title">Selected Color</h2>
-		<p style="color: {drawColor};">{drawColor}</p>
+		<h2 class="card-title">Background</h2>
+		<p style="color: {backgroundColor};">{backgroundColor}</p>
 		<div class="grid grid-cols-5 gap-2">
-			{#each ['#FF0000', '#0000FF', '#008000', '#FFFF00', '#800080', '#FFA500', '#FFC0CB', '#A52A2A', '#000000', '#FFFFFF'] as color}
+			{#each ['black', 'white'] as color}
 				<button
 					class="btn btn-square"
 					style="background-color: {color};"

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import MouseTracker from '../lib/components/MouseTracker.svelte';
-	import type { Settings } from '$lib/components/game/gameTypes';
+	import MouseTracker from '$lib/components/MouseTracker.svelte';
 	import Canvas from '$lib/components/game/Canvas.svelte';
-	import ColorPalette from '$lib/components/game/ColorPalette.svelte';
+	import ColorPalette from '$lib/components/game/Palette.svelte';
 	import PromptInfo from '$lib/components/game/prompt/PromptInfo.svelte';
+	import BackgroundPalette from '$lib/components/game/BackgroundPalette.svelte';
 
 	let clientId = $state('');
 	let showMouseTracker = $state(false);
@@ -16,23 +16,11 @@
 	const user = $derived(data.user);
 	let signedIn = $derived.by(() => !!user);
 
-	const getColorFromClientId = (client_id: string) => {
-		let hash = 0;
-		for (let i = 0; i < client_id.length; i++) {
-			hash = client_id.charCodeAt(i) + ((hash << 5) - hash);
-		}
-		const hue = Math.abs(hash) % 360;
-		return `hsl(${hue}, 80%, 60%)`;
-	};
-	let drawColor = '#ff0000'; // Default color for drawing
+	let drawColor = $state('#ff0000');
+	let backgroundColor = $state('white');
 
 	const CURSOR_OFFSET_X = 3;
 	const CURSOR_OFFSET_Y = -45;
-
-	let canvasSettings: Settings = $state({
-		drawColor: drawColor,
-		backgroundColor: 'black'
-	});
 
 	$inspect(drawColor);
 </script>
@@ -73,7 +61,7 @@
 
 	<!-- Center Canvas -->
 	<div class="col-span-6 row-span-12 w-full">
-		<Canvas settings={canvasSettings} />
+		<Canvas bind:drawColor bind:backgroundColor />
 	</div>
 
 	<!-- Right color palette column -->
@@ -86,6 +74,9 @@
 		</div>
 		<div class="row-span-3">
 			<ColorPalette bind:drawColor />
+		</div>
+		<div class="row-span-3">
+			<BackgroundPalette bind:backgroundColor />
 		</div>
 	</div>
 </div>

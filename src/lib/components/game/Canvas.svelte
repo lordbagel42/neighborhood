@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Settings } from './gameTypes';
 
 	interface Props {
-		settings: Settings;
+		drawColor: string;
+		backgroundColor: string;
 	}
 
-	const { settings }: Props = $props();
+	const { drawColor = $bindable(), backgroundColor = $bindable() }: Props = $props();
 
 	let targetWidth = 100;
 	let targetHeight = 100;
@@ -33,7 +33,7 @@
 		const scaleY = canvas.height / targetHeight;
 
 		// Fill the canvas with seeded random colors based on the key
-		ctx.fillStyle = settings.backgroundColor;
+		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		const paintPixel = (event: MouseEvent) => {
@@ -48,7 +48,7 @@
 			const pixelY = Math.floor(clickY / scaleY);
 
 			// Update the clicked pixel's color
-			ctx.fillStyle = settings.drawColor;
+			ctx.fillStyle = drawColor;
 			ctx.fillRect(pixelX * scaleX, pixelY * scaleY, scaleX, scaleY);
 		};
 
@@ -71,6 +71,12 @@
 		canvas.addEventListener('mouseleave', () => {
 			isDrawing = false;
 		});
+	});
+
+	$effect(() => {
+		if (!ctx) return;
+		ctx.fillStyle = backgroundColor;
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	});
 </script>
 
