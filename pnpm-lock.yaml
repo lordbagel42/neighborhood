@@ -26,9 +26,6 @@ importers:
       mode-watcher:
         specifier: ^1.0.7
         version: 1.0.7(svelte@5.28.2)
-      seedrandom:
-        specifier: ^3.0.5
-        version: 3.0.5
       svelte-portal:
         specifier: ^2.2.1
         version: 2.2.1
@@ -1780,9 +1777,6 @@ packages:
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  seedrandom@3.0.5:
-    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
 
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
@@ -3594,8 +3588,6 @@ snapshots:
   safe-buffer@5.2.1: {}
 
   safer-buffer@2.1.2: {}
-
-  seedrandom@3.0.5: {}
 
   semver@7.7.1: {}
 

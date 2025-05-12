@@ -10,10 +10,10 @@
 		CURSOR_OFFSET_Y: number;
 		supabase: SupabaseClient;
 		showMouseTracker: boolean;
-		myColor: string;
+		drawColor: string;
 	}
 
-	let { clientId, CURSOR_OFFSET_X, CURSOR_OFFSET_Y, supabase, showMouseTracker, myColor } =
+	let { clientId, CURSOR_OFFSET_X, CURSOR_OFFSET_Y, supabase, showMouseTracker, drawColor } =
 		$props();
 
 	let mousePositions: {
@@ -119,8 +119,8 @@
 			)}px, 0);"
 			title="You"
 		>
-			<MousePointer2 fill={myColor} />
-			<span class="font-xl rounded-5 rounded bg-white p-2 font-bold" style="color: {myColor}">
+			<MousePointer2 fill={drawColor} />
+			<span class="font-xl rounded-5 rounded bg-white p-2 font-bold" style="color: {drawColor}">
 				{clientId}
 			</span>
 		</div>

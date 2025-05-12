@@ -1,6 +1,9 @@
 <script lang="ts">
 	import MouseTracker from '../lib/components/MouseTracker.svelte';
+	import type { Settings } from '$lib/components/game/gameTypes';
 	import Canvas from '$lib/components/game/Canvas.svelte';
+	import ColorPalette from '$lib/components/game/ColorPalette.svelte';
+	import PromptInfo from '$lib/components/game/prompt/PromptInfo.svelte';
 
 	let clientId = $state('');
 	let showMouseTracker = $state(false);
@@ -21,10 +24,17 @@
 		const hue = Math.abs(hash) % 360;
 		return `hsl(${hue}, 80%, 60%)`;
 	};
-	const myColor = $derived.by(() => getColorFromClientId(clientId || crypto.randomUUID()));
+	let drawColor = '#ff0000'; // Default color for drawing
 
 	const CURSOR_OFFSET_X = 3;
 	const CURSOR_OFFSET_Y = -45;
+
+	let canvasSettings: Settings = $state({
+		drawColor: drawColor,
+		backgroundColor: 'black'
+	});
+
+	$inspect(drawColor);
 </script>
 
 {#if !signedIn}
@@ -54,18 +64,29 @@
 	{CURSOR_OFFSET_Y}
 	{supabase}
 	{showMouseTracker}
-	{myColor}
+	{drawColor}
 />
 
-<div class="mt-4 flex h-[calc(100vh-8rem)] items-center justify-center">
-	<div class="aspect-square w-full max-w-[calc(100vh-8rem)] p-4">
-		<input
-			type="text"
-			placeholder="Enter a key"
-			bind:value={key}
-			class="input input-bordered mb-4 w-full"
-		/>
-		<Canvas {myColor} {key} />
+<div class="mx-4 my-4 grid h-[calc(100vh-6rem)] grid-cols-12 grid-rows-12 justify-center gap-2">
+	<!-- Left spacer -->
+	<div class="col-span-3"></div>
+
+	<!-- Center Canvas -->
+	<div class="col-span-6 row-span-12 w-full">
+		<Canvas settings={canvasSettings} />
+	</div>
+
+	<!-- Right color palette column -->
+	<div class="col-span-3 row-span-12 grid grid-rows-subgrid gap-2">
+		<!-- First color box: spans rows 1-6 -->
+
+		<!-- Second color box: spans rows 7-12 -->
+		<div class="row-span-2">
+			<PromptInfo />
+		</div>
+		<div class="row-span-3">
+			<ColorPalette bind:drawColor />
+		</div>
 	</div>
 </div>
 

@@ -1,29 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import seedrandom from 'seedrandom';
+	import type { Settings } from './gameTypes';
 
 	interface Props {
-		key: string;
-		myColor: string;
+		settings: Settings;
 	}
 
-	const { myColor, key }: Props = $props();
+	const { settings }: Props = $props();
 
 	let targetWidth = 100;
 	let targetHeight = 100;
 
 	let realWidth = 2000;
 	let realHeight = 2000;
-
-	const seededRandomColor = (seed: string) => {
-		const rng = seedrandom(seed);
-		const letters = '0123456789ABCDEF';
-		let color = '#';
-		for (let i = 0; i < 6; i++) {
-			color += letters[Math.floor(rng() * 16)];
-		}
-		return color;
-	};
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null;
@@ -44,12 +33,8 @@
 		const scaleY = canvas.height / targetHeight;
 
 		// Fill the canvas with seeded random colors based on the key
-		for (let x = 0; x < targetWidth; x++) {
-			for (let y = 0; y < targetHeight; y++) {
-				ctx.fillStyle = seededRandomColor(`${key}-${x}-${y}`);
-				ctx.fillRect(x * scaleX, y * scaleY, scaleX, scaleY);
-			}
-		}
+		ctx.fillStyle = settings.backgroundColor;
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		const paintPixel = (event: MouseEvent) => {
 			if (!ctx || !canvas) return;
@@ -63,7 +48,7 @@
 			const pixelY = Math.floor(clickY / scaleY);
 
 			// Update the clicked pixel's color
-			ctx.fillStyle = myColor;
+			ctx.fillStyle = settings.drawColor;
 			ctx.fillRect(pixelX * scaleX, pixelY * scaleY, scaleX, scaleY);
 		};
 
@@ -86,26 +71,6 @@
 		canvas.addEventListener('mouseleave', () => {
 			isDrawing = false;
 		});
-	});
-
-	$effect(() => {
-		if (!ctx || !canvas) return;
-
-		// Set canvas dimensions to match the real dimensions
-		canvas.width = realWidth;
-		canvas.height = realHeight;
-
-		// Calculate scaling factors based on the target and real dimensions
-		const scaleX = canvas.width / targetWidth;
-		const scaleY = canvas.height / targetHeight;
-
-		// Fill the canvas with seeded random colors based on the key
-		for (let x = 0; x < targetWidth; x++) {
-			for (let y = 0; y < targetHeight; y++) {
-				ctx.fillStyle = seededRandomColor(`${key}-${x}-${y}`);
-				ctx.fillRect(x * scaleX, y * scaleY, scaleX, scaleY);
-			}
-		}
 	});
 </script>
 
