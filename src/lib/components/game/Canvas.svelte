@@ -20,6 +20,9 @@
 
 	let isDrawing = false;
 
+	let lastX: number | null = null;
+	let lastY: number | null = null;
+
 	onMount(() => {
 		if (!canvas) return;
 		ctx = canvas.getContext('2d');
@@ -48,9 +51,27 @@
 			const pixelX = Math.floor(clickX / scaleX);
 			const pixelY = Math.floor(clickY / scaleY);
 
-			// Update the clicked pixel's color
-			ctx.fillStyle = drawColor.rgba.toString();
-			ctx.fillRect(pixelX * scaleX, pixelY * scaleY, scaleX, scaleY);
+			// Draw a line from the last position to the current position
+			if (lastX !== null && lastY !== null) {
+				const dx = pixelX - lastX;
+				const dy = pixelY - lastY;
+				const steps = Math.max(Math.abs(dx), Math.abs(dy));
+
+				for (let i = 0; i <= steps; i++) {
+					const interpolatedX = Math.floor(lastX + (dx * i) / steps);
+					const interpolatedY = Math.floor(lastY + (dy * i) / steps);
+					ctx.fillStyle = drawColor.rgba.toString();
+					ctx.fillRect(interpolatedX * scaleX, interpolatedY * scaleY, scaleX, scaleY);
+				}
+			} else {
+				// If no last position, just paint the current pixel
+				ctx.fillStyle = drawColor.rgba.toString();
+				ctx.fillRect(pixelX * scaleX, pixelY * scaleY, scaleX, scaleY);
+			}
+
+			// Update the last position
+			lastX = pixelX;
+			lastY = pixelY;
 		};
 
 		// Add click event listener to update pixel color
@@ -67,10 +88,14 @@
 
 		window.addEventListener('mouseup', () => {
 			isDrawing = false;
+			lastX = null;
+			lastY = null;
 		});
 
 		canvas.addEventListener('mouseleave', () => {
 			isDrawing = false;
+			lastX = null;
+			lastY = null;
 		});
 	});
 
