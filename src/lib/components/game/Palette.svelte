@@ -1,11 +1,18 @@
 <script lang="ts">
+	import { Color } from 'colors/color';
+
 	interface Props {
-		drawColor: string;
+		drawColor: Color;
 	}
 
 	let { drawColor = $bindable() }: Props = $props();
 
-	const setColor = (color: string) => {
+	const colorList = Object.entries(Color.colors).map(([name, rgba]) => {
+		const [r, g, b] = rgba;
+		return Color.fromRGB(r, g, b);
+	});
+
+	const setColor = (color: Color) => {
 		drawColor = color;
 		console.log('Selected color:', drawColor);
 	};
@@ -14,9 +21,9 @@
 <div class="card bg-base-100 h-full w-full border-2 border-black shadow">
 	<div class="card-body">
 		<h2 class="card-title">Draw</h2>
-		<p style="color: {drawColor};">{drawColor}</p>
+		<p style="color: {drawColor};">{drawColor.closestName.name}</p>
 		<div class="grid grid-cols-5 gap-2">
-			{#each ['#FF0000', '#0000FF', '#008000', '#FFFF00', '#800080', '#FFA500', '#FFC0CB', '#A52A2A', '#000000', '#FFFFFF'] as color}
+			{#each colorList as color}
 				<button
 					class="btn btn-square"
 					style="background-color: {color};"

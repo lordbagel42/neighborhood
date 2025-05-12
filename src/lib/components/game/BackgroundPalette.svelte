@@ -1,11 +1,26 @@
 <script lang="ts">
+	import { Color } from 'colors/color';
+
 	interface Props {
-		backgroundColor: string;
+		backgroundColor: Color;
 	}
 
 	let { backgroundColor = $bindable() }: Props = $props();
 
-	const setColor = (color: string) => {
+	// const colorList = [
+	// 	Color.fromName('red'),
+	// 	Color.fromName('green'),
+	// 	Color.fromName('red'),
+	// 	Color.fromName('green'),
+	// 	Color.fromName('blue')
+	// ];
+
+	const colorList = Object.entries(Color.colors).map(([name, rgba]) => {
+		const [r, g, b] = rgba;
+		return Color.fromRGB(r, g, b);
+	});
+
+	const setColor = (color: Color) => {
 		backgroundColor = color;
 		console.log('Selected color:', backgroundColor);
 	};
@@ -14,9 +29,9 @@
 <div class="card bg-base-100 h-full w-full border-2 border-black shadow">
 	<div class="card-body">
 		<h2 class="card-title">Background</h2>
-		<p style="color: {backgroundColor};">{backgroundColor}</p>
+		<p style="color: {backgroundColor};">{backgroundColor.closestName.name}</p>
 		<div class="grid grid-cols-5 gap-2">
-			{#each ['black', 'white'] as color}
+			{#each colorList as color}
 				<button
 					class="btn btn-square"
 					style="background-color: {color};"

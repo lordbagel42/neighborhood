@@ -4,6 +4,7 @@
 	import ColorPalette from '$lib/components/game/Palette.svelte';
 	import PromptInfo from '$lib/components/game/prompt/PromptInfo.svelte';
 	import BackgroundPalette from '$lib/components/game/BackgroundPalette.svelte';
+	import { Color } from 'colors/color';
 
 	let clientId = $state('');
 	let showMouseTracker = $state(false);
@@ -16,8 +17,8 @@
 	const user = $derived(data.user);
 	let signedIn = $derived.by(() => !!user);
 
-	let drawColor = $state('#ff0000');
-	let backgroundColor = $state('white');
+	let drawColor = $state(Color.fromName('blue'));
+	let backgroundColor = $state(Color.fromName('white'));
 
 	const CURSOR_OFFSET_X = 3;
 	const CURSOR_OFFSET_Y = -45;
@@ -56,26 +57,33 @@
 />
 
 <div class="mx-4 my-4 grid h-[calc(100vh-6rem)] grid-cols-12 grid-rows-12 justify-center gap-2">
-	<!-- Left spacer -->
-	<div class="col-span-3"></div>
+	<!-- Left -->
+	<div class="col-span-3 row-span-12 grid grid-rows-subgrid gap-2">
+		<!-- <div class="row-span-2">
+			<PromptInfo />
+		</div> -->
+		<div class="row-span-12">
+			<ColorPalette bind:drawColor />
+		</div>
+		<!-- <div class="row-span-3">
+			<BackgroundPalette bind:backgroundColor />
+		</div> -->
+	</div>
 
-	<!-- Center Canvas -->
+	<!-- Center -->
 	<div class="col-span-6 row-span-12 w-full">
 		<Canvas bind:drawColor bind:backgroundColor />
 	</div>
 
-	<!-- Right color palette column -->
+	<!-- Right -->
 	<div class="col-span-3 row-span-12 grid grid-rows-subgrid gap-2">
-		<!-- First color box: spans rows 1-6 -->
-
-		<!-- Second color box: spans rows 7-12 -->
-		<div class="row-span-2">
+		<!-- <div class="row-span-2">
 			<PromptInfo />
-		</div>
-		<div class="row-span-3">
+		</div> -->
+		<!-- <div class="row-span-3">
 			<ColorPalette bind:drawColor />
-		</div>
-		<div class="row-span-3">
+		</div> -->
+		<div class="row-span-12">
 			<BackgroundPalette bind:backgroundColor />
 		</div>
 	</div>

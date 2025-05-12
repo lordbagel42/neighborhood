@@ -17,6 +17,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.49.4
         version: 2.49.4
+      colors:
+        specifier: github:tsaxking/colors
+        version: https://codeload.github.com/tsaxking/colors/tar.gz/033743f3dc346eb907160d770ba1bced183e4565
       daisyui:
         specifier: ^5.0.35
         version: 5.0.35
@@ -957,6 +960,10 @@ packages:
   color@4.2.3:
     resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
     engines: {node: '>=12.5.0'}
+
+  colors@https://codeload.github.com/tsaxking/colors/tar.gz/033743f3dc346eb907160d770ba1bced183e4565:
+    resolution: {tarball: https://codeload.github.com/tsaxking/colors/tar.gz/033743f3dc346eb907160d770ba1bced183e4565}
+    version: 1.0.0
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -2839,6 +2846,10 @@ snapshots:
       color-convert: 2.0.1
       color-string: 1.9.1
     optional: true
+
+  colors@https://codeload.github.com/tsaxking/colors/tar.gz/033743f3dc346eb907160d770ba1bced183e4565:
+    dependencies:
+      typescript: 5.8.3
 
   concat-map@0.0.1: {}
 

@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { Color } from '$lib/utils/colors/color';
 	import { onMount } from 'svelte';
 
 	interface Props {
-		drawColor: string;
-		backgroundColor: string;
+		drawColor: Color;
+		backgroundColor: Color;
 	}
 
 	const { drawColor = $bindable(), backgroundColor = $bindable() }: Props = $props();
@@ -33,7 +34,7 @@
 		const scaleY = canvas.height / targetHeight;
 
 		// Fill the canvas with seeded random colors based on the key
-		ctx.fillStyle = backgroundColor;
+		ctx.fillStyle = backgroundColor.hex.toString();
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		const paintPixel = (event: MouseEvent) => {
@@ -48,7 +49,7 @@
 			const pixelY = Math.floor(clickY / scaleY);
 
 			// Update the clicked pixel's color
-			ctx.fillStyle = drawColor;
+			ctx.fillStyle = drawColor.rgba.toString();
 			ctx.fillRect(pixelX * scaleX, pixelY * scaleY, scaleX, scaleY);
 		};
 
@@ -75,7 +76,7 @@
 
 	$effect(() => {
 		if (!ctx) return;
-		ctx.fillStyle = backgroundColor;
+		ctx.fillStyle = backgroundColor.rgba.toString();
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	});
 </script>
