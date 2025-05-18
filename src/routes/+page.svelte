@@ -6,8 +6,8 @@
 	import BackgroundPalette from '$lib/components/game/BackgroundPalette.svelte';
 	import { Color } from 'colors/color';
 
-	let clientId = $state('');
-	let showMouseTracker = $state(false);
+	let clientId = $state(crypto.randomUUID());
+	let showMouseTracker = $state(true);
 	let clientCount = $state(0);
 
 	const { data } = $props();
@@ -21,7 +21,7 @@
 	let backgroundColor = $state(Color.fromName('white'));
 
 	const CURSOR_OFFSET_X = 3;
-	const CURSOR_OFFSET_Y = -45;
+	const CURSOR_OFFSET_Y = 5;
 
 	$inspect(drawColor);
 </script>

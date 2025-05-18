@@ -3,6 +3,7 @@
 	import { MousePointer2 } from '@lucide/svelte';
 	import Portal from 'svelte-portal';
 	import type { SupabaseClient } from '@supabase/supabase-js';
+	import type { Color } from 'colors/color';
 
 	interface Props {
 		clientId: string;
@@ -10,10 +11,10 @@
 		CURSOR_OFFSET_Y: number;
 		supabase: SupabaseClient;
 		showMouseTracker: boolean;
-		drawColor: string;
+		drawColor: Color;
 	}
 
-	let { clientId, CURSOR_OFFSET_X, CURSOR_OFFSET_Y, supabase, showMouseTracker, drawColor } =
+	let { clientId, CURSOR_OFFSET_X, CURSOR_OFFSET_Y, supabase, showMouseTracker, drawColor }: Props =
 		$props();
 
 	let mousePositions: {
@@ -51,6 +52,8 @@
 			const now = Date.now();
 			const existing = mousePositions.find((p) => p.client_id === updated.client_id);
 
+			console.log('Mouse Position:', updated.client_id, updated.x, updated.y);
+
 			if (existing) {
 				existing.x = updated.x;
 				existing.y = updated.y;
@@ -81,6 +84,7 @@
 			const now = Date.now();
 			if (showMouseTracker) {
 				if (now - lastSent > THROTTLE_MS) {
+					console.log('Sending mouse position:', localX, localY, clientId);
 					lastSent = now;
 					channel.send({
 						type: 'broadcast',
@@ -115,12 +119,15 @@
 		<div
 			class="client-box my-cursor"
 			style="transform: translate3d({Math.round(localX - CURSOR_OFFSET_X)}px, {Math.round(
-				localY - CURSOR_OFFSET_Y - window.innerHeight
+				localY - CURSOR_OFFSET_Y - innerHeight
 			)}px, 0);"
 			title="You"
 		>
-			<MousePointer2 fill={drawColor} />
-			<span class="font-xl rounded-5 rounded bg-white p-2 font-bold" style="color: {drawColor}">
+			<MousePointer2 fill={drawColor.rgba.toString()} />
+			<span
+				class="font-xl rounded-5 rounded bg-white p-2 font-bold"
+				style="color: {drawColor.rgba.toString()}"
+			>
 				{clientId}
 			</span>
 		</div>
@@ -129,8 +136,8 @@
 	{#each mousePositions as { client_id, x, y, color } (client_id)}
 		<div
 			class="client-box"
-			style="transform: translate3d({Math.round(localX - CURSOR_OFFSET_X)}px, {Math.round(
-				localY - CURSOR_OFFSET_Y - window.innerHeight
+			style="transform: translate3d({Math.round(x - CURSOR_OFFSET_X)}px, {Math.round(
+				y - CURSOR_OFFSET_Y - innerHeight
 			)}px, 0);"
 			title={`Client: ${client_id}`}
 		>
