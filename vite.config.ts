@@ -9,8 +9,7 @@ export default defineConfig({
 			sourceMapsUploadOptions: {
 				org: 'raygen-rupe',
 				project: 'neighborhood'
-			},
-			autoUploadSourceMaps: true
+			}
 		}),
 		tailwindcss(),
 		sveltekit()
