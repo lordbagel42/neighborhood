@@ -52,7 +52,7 @@
 			const now = Date.now();
 			const existing = mousePositions.find((p) => p.client_id === updated.client_id);
 
-			console.log('Mouse Position:', updated.client_id, updated.x, updated.y);
+			// console.log('Mouse Position:', updated.client_id, updated.x, updated.y);
 
 			if (existing) {
 				existing.x = updated.x;
@@ -84,7 +84,7 @@
 			const now = Date.now();
 			if (showMouseTracker) {
 				if (now - lastSent > THROTTLE_MS) {
-					console.log('Sending mouse position:', localX, localY, clientId);
+					// console.log('Sending mouse position:', localX, localY, clientId);
 					lastSent = now;
 					channel.send({
 						type: 'broadcast',

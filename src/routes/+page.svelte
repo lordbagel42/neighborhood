@@ -72,7 +72,7 @@
 
 	<!-- Center -->
 	<div class="col-span-6 row-span-12 w-full">
-		<Canvas bind:drawColor bind:backgroundColor />
+		<Canvas {clientId} {supabase} bind:drawColor bind:backgroundColor />
 	</div>
 
 	<!-- Right -->
