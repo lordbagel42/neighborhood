@@ -112,14 +112,19 @@
 			clearInterval(cleanupInterval);
 		};
 	});
+
+	let HEIGHT: number | undefined = $state();
+	let WIDTH: number | undefined = $state();
 </script>
 
+<svelte:window bind:innerHeight={HEIGHT} bind:innerWidth={WIDTH} />
+
 <Portal target="body">
-	{#if showMouseTracker}
+	{#if showMouseTracker && HEIGHT && WIDTH}
 		<div
 			class="client-box my-cursor"
 			style="transform: translate3d({Math.round(localX - CURSOR_OFFSET_X)}px, {Math.round(
-				localY - CURSOR_OFFSET_Y - innerHeight
+				localY - CURSOR_OFFSET_Y - HEIGHT
 			)}px, 0);"
 			title="You"
 		>
@@ -134,18 +139,20 @@
 	{/if}
 
 	{#each mousePositions as { client_id, x, y, color } (client_id)}
-		<div
-			class="client-box"
-			style="transform: translate3d({Math.round(x - CURSOR_OFFSET_X)}px, {Math.round(
-				y - CURSOR_OFFSET_Y - innerHeight
-			)}px, 0);"
-			title={`Client: ${client_id}`}
-		>
-			<MousePointer2 fill={color} />
-			<span style="color: {color}; font-weight: bold; font-size: 0.8rem;">
-				{client_id}
-			</span>
-		</div>
+		{#if HEIGHT && WIDTH}
+			<div
+				class="client-box"
+				style="transform: translate3d({Math.round(x - CURSOR_OFFSET_X)}px, {Math.round(
+					y - CURSOR_OFFSET_Y - HEIGHT
+				)}px, 0);"
+				title={`Client: ${client_id}`}
+			>
+				<MousePointer2 fill={color} />
+				<span style="color: {color}; font-weight: bold; font-size: 0.8rem;">
+					{client_id}
+				</span>
+			</div>
+		{/if}
 	{/each}
 </Portal>
 
