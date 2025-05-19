@@ -26,7 +26,7 @@
 	$inspect(drawColor);
 </script>
 
-{#if !signedIn}
+<!-- {#if !signedIn}
 	<div class="m-4 flex flex-col items-center justify-center gap-2">
 		<input
 			type="text"
@@ -45,7 +45,7 @@
 			Start Tracking
 		</button>
 	</div>
-{/if}
+{/if} -->
 
 <MouseTracker
 	{clientId}
