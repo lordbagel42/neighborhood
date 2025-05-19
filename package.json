@@ -41,7 +41,8 @@
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
-			"esbuild"
+			"esbuild",
+			"@sentry/cli"
 		]
 	},
 	"dependencies": {
